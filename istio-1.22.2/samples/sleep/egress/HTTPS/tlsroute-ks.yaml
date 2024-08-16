@@ -1,0 +1,31 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: direct-cnn-to-egress-gateway
+  namespace: sleep
+spec:
+  parentRefs:
+  - kind: ServiceEntry
+    group: networking.istio.io
+    name: cnn
+  rules:
+  - backendRefs:
+    - name: cnn-egress-gateway-istio
+      port: 443
+---
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: forward-cnn-from-egress-gateway
+  namespace: sleep
+spec:
+  parentRefs:
+  - name: cnn-egress-gateway
+  hostnames:
+  - edition.cnn.com
+  rules:
+  - backendRefs:
+    - kind: Hostname
+      group: networking.istio.io
+      name: edition.cnn.com
+      port: 443

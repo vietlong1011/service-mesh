@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: bookinfo-productpage-vs
+  # namespace: bookinfo-lab
+spec:
+  hosts:
+  - "productpage.bookinfo-lab.svc.cluster.local"
+  http:
+  - match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: productpage
+        subset: v1

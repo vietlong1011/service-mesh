@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: echo-weights
+  namespace: echo-grpc
+spec:
+  hosts:
+  - echo.echo-grpc.svc.cluster.local
+  http:
+  - route:
+    - destination:
+        host: echo.echo-grpc.svc.cluster.local
+        subset: v1
+      weight: 20
+    - destination:
+        host: echo.echo-grpc.svc.cluster.local
+        subset: v2
+      weight: 80

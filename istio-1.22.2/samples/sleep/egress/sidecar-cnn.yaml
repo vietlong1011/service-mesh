@@ -1,0 +1,16 @@
+#this is sidecar proxy
+apiVersion: networking.istio.io/v1alpha3
+kind: Sidecar
+metadata:
+  name: egress-sleep
+  namespace: sleep
+spec:
+  workloadSelector:
+    labels:
+      app: sleep
+  egress:
+  - hosts: 
+    - "./*"  # chi cho phep giao tiep trong cung 1 namespace
+    - "istio-system/*"
+    # - "bookinfo-lab/*"
+   

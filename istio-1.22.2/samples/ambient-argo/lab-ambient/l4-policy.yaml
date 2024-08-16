@@ -1,0 +1,22 @@
+#After you have added your application to ambient mesh, you can secure application access using L4 authorization policies. 
+#This lets you control access to and from a service based on client workload identities, but not at the L7 level, such as HTTP methods like GET and POST.
+
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+ name: productpage-viewer
+ namespace: bookinfo-lab
+spec:
+ selector:
+   matchLabels:
+     app: productpage
+ action: ALLOW #cho phep truy cap khi cac dk trong rules thoa man
+ rules:
+ - from:
+   - source:
+       principals:
+       - cluster.local/ns/bookinfo-lab/sa/sleep  #cho phep cac yeu cau tu cac pod sd SA `sleep` trong ns bookinfo-lab
+       - cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account #Cho phép các yêu cầu từ các ServiceAccount được xác định bởi biến môi trường
+      
+       # GATEWAY_HOST=bookinfo-gateway-istio.istio-system
+       # GATEWAY_SERVICE_ACCOUNT=ns/istio-system/sa/istio-ingressgateway-service-account

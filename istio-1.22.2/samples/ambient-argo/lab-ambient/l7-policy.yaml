@@ -1,0 +1,22 @@
+#Using the Kubernetes Gateway API, you can deploy a waypoint proxy for the productpage service that uses the bookinfo-productpage service account.
+#Any traffic going to the productpage service will be mediated, enforced and observed by the Layer 7 (L7) proxy.
+
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+ name: productpage-viewer
+ namespace: bookinfo-lab
+spec:
+ selector:
+   matchLabels:
+     istio.io/gateway-name: bookinfo-productpage
+ action: ALLOW
+ rules:
+ - from:
+   - source:
+       principals:
+       - cluster.local/ns/bookinfo-lab/sa/sleep
+       - cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account
+   to:
+   - operation:  # chi cho phep GET
+       methods: ["GET"]

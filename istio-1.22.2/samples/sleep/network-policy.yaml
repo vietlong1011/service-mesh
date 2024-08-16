@@ -1,0 +1,25 @@
+# sử dụng để kiểm soát lưu lượng mạng đi ra ngoài (egress) từ các pod trong một namespace cụ thể.
+#  Cấu hình này xác định các quy tắc cho phép hoặc từ chối traffic egress từ các pod dựa trên các tiêu chí như 
+#  namespace, nhãn, và cổng mạng.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: restrict-pod-egress
+spec:
+  podSelector: {}  # NetworkPolicy use for all pod on namespace (namespace deloy)
+  policyTypes:
+  - Egress        # use traffic egress
+  egress:
+  - to:      # cho phep traffic egress den cac pod trong namespace co label ...
+    - namespaceSelector:   
+        matchLabels:
+          kube-system: "true"
+    ports:   # chi dinh truc tiep protocol va port ma no cho phep (service DNS)
+    - protocol: UDP
+      port: 53
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          istio: system # Add labels to istio-system and istio-egress namespaces
+          istio: egress

@@ -1,0 +1,21 @@
+#egress gateway 
+# create 1 gateway access traffic HTTP -> hostname on port 80
+# chi cho phep cac router tu cung namespace sleep
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: cnn-egress-gateway
+  annotations:
+    networking.istio.io/service-type: ClusterIP #The gateway can only access devices within the cluster
+  namespace: sleep
+spec:
+  gatewayClassName: istio
+  listeners:  #listener traffic
+  - name: http
+    hostname: edition.cnn.com
+    port: 80
+    protocol: HTTP
+    allowedRoutes: #Quy định rằng chỉ các route từ cùng namespace (sleep) được phép
+      namespaces:
+        from: Same
+
